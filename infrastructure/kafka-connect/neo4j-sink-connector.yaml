@@ -1,0 +1,19 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: neo4j-sink
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: neo4j-connect-cluster
+spec:
+  class: streams.kafka.connect.sink.Neo4jSinkConnector
+  tasksMax: 1
+  config:
+    topics: documents
+    neo4j.server.uri: bolt://neo4j-neo4j.neo4j.svc.cluster.local:7687
+    neo4j.authentication.username: neo4j
+    neo4j.authentication.password: neo4j123
+    neo4j.topic.cypher.documents: "MERGE (d:Document {id: event.id}) SET d += event.properties"
+    errors.tolerance: "all"
+    errors.log.enable: "true"
+    errors.log.include.messages: "true"
