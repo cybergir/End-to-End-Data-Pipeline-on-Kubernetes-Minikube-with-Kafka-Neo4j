@@ -1,0 +1,49 @@
+# ci-cd/github-actions/deploy.yaml
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Test Producer Application
+        run: |
+          cd applications/producer-app
+          pip install -r requirements.txt
+          python -c "from producer import create_producer; print('Producer imports work')"
+
+      - name: Test Consumer Application
+        run: |
+          cd applications/consumer-app
+          pip install -r requirements.txt
+          python -c "from consumer import main; print('Consumer imports work')"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Kubernetes tools
+        uses: azure/setup-kubectl@v3
+
+      - name: Deploy to Kubernetes
+        run: |
+          echo "Deployment would happen here in a real environment"
+          echo "For now, this demonstrates CI/CD pipeline structure"
