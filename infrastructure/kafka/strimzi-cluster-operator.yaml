@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: strimzi-lease-role
+  namespace: kafka
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "create", "update", "patch", "delete", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: strimzi-lease-binding
+  namespace: kafka
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: strimzi-lease-role
+subjects:
+  - kind: ServiceAccount
+    name: strimzi-cluster-operator
+    namespace: kafka
