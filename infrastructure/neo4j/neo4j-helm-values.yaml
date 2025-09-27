@@ -1,0 +1,9 @@
+neo4j:
+  name: "datastore"
+  password: "neo4j123"
+  edition: "community"
+  acceptLicenseAgreement: "yes"
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
