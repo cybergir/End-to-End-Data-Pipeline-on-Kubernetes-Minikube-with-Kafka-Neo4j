@@ -20,16 +20,16 @@ def create_producer():
             value_serializer=lambda v: json.dumps(v).encode('utf-8'),
             retries=5
         )
-        print(f"✅ Connected to Kafka at {KAFKA_BOOTSTRAP_SERVERS}")
+        print(f"Connected to Kafka at {KAFKA_BOOTSTRAP_SERVERS}")
         return producer
     except Exception as e:
-        print(f"❌ Failed to connect to Kafka: {e}")
+        print(f"Failed to connect to Kafka: {e}")
         return None
 
 def produce_sample_data():
     producer = create_producer()
     if not producer:
-        print("❌ Cannot create producer. Exiting.")
+        print("Cannot create producer. Exiting.")
         return
 
     user_actions = ['login', 'purchase', 'view', 'logout', 'search']
@@ -44,14 +44,14 @@ def produce_sample_data():
             }
             
             producer.send(TOPIC_NAME, value=message)
-            print(f"📤 Sent message {i+1}: {message}")
+            print(f"Sent message {i+1}: {message}")
             time.sleep(2)
             
         producer.flush()
-        print("✅ All messages sent successfully!")
+        print("All messages sent successfully!")
         
     except Exception as e:
-        print(f"❌ Error producing messages: {e}")
+        print(f"Error producing messages: {e}")
     finally:
         if producer:
             producer.close()

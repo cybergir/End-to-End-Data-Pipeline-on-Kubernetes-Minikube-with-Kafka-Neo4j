@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Kafka-Neo4j Data Pipeline Deployment..."
+echo "Starting Kafka-Neo4j Data Pipeline Deployment..."
 echo "==================================================="
 
 # Colors for output

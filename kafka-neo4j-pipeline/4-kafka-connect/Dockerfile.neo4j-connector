@@ -1,7 +1,0 @@
-FROM quay.io/strimzi/kafka:latest-kafka-3.6.0
-USER root:root
-RUN mkdir -p /opt/kafka/plugins/neo4j
-ADD https://github.com/neo4j-contrib/neo4j-streams/releases/download/5.0.1/kafka-connect-neo4j-5.0.1.zip /opt/kafka/plugins/neo4j/
-RUN yum -y install unzip && \
-    unzip /opt/kafka/plugins/neo4j/kafka-connect-neo4j-5.0.1.zip -d /opt/kafka/plugins/neo4j/
-USER 1001

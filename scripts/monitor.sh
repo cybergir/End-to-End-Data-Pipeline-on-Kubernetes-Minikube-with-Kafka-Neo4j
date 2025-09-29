@@ -20,7 +20,7 @@ print_error() { echo -e "${RED}✗ $1${NC}"; }
 
 # Display cluster overview
 cluster_overview() {
-    print_header "🏗️  Cluster Overview"
+    print_header "Cluster Overview"
     echo "Namespace: $NAMESPACE"
     echo "Timestamp: $(date)"
     echo ""
