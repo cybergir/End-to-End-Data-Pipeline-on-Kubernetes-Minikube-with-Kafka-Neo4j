@@ -105,7 +105,7 @@ Build and run:
 ```bash
 cd applications/consumer-app
 docker build -t kafka-consumer .
-kubectl apply -f consumer-deployment.yaml
+kubectl apply -f k8s-deployment.yaml
 ```
 
 Or run locally with Python:
@@ -126,8 +126,26 @@ kubectl apply -f neo4j-deployment.yaml -n kafka
 
 Port-forward to access locally:
 
+```bash (in the root folder of different terminals)
+kubectl port-forward -n kafka pod/kafka-cffd54d57-d2jfc 9092:9092
+kubectl port-forward -n kafka pod/neo4j-56d78858d5-lvvmd 7474:7474 7687:7687
+kubectl port-forward -n kafka pod/backend-dashboard-667466dccf-qlbmk 8000:8000
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+# Send test messages to Kafka
+
 ```bash
-kubectl port-forward -n kafka deployment/neo4j 7474:7474 7687:7687
+kubectl exec -n kafka -it deployment/kafka -- bash -c "
+echo '{\"user_id\": \"123\", \"action\": \"login\", \"timestamp\": \"$(date -Iseconds)\"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic user-events
+echo '{\"user_id\": \"456\", \"action\": \"purchase\", \"timestamp\": \"$(date -Iseconds)\"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic user-events
+"
+```
+
+# Read messages from the topic
+
+```bash
+kubectl exec -n kafka -it deployment/kafka -- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic user-events --from-beginning --timeout-ms 3000
 ```
 
 Web UI: [http://localhost:7474](http://localhost:7474)
